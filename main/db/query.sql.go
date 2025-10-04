@@ -69,6 +69,27 @@ func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {
 	return i, err
 }
 
+const getUserBySessionToken = `-- name: GetUserBySessionToken :one
+SELECT id, username, hashed_password, session_token, csrf_token, created_at, updated_at FROM users 
+WHERE session_token = ? 
+LIMIT 1
+`
+
+func (q *Queries) GetUserBySessionToken(ctx context.Context, sessionToken sql.NullString) (User, error) {
+	row := q.db.QueryRowContext(ctx, getUserBySessionToken, sessionToken)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.HashedPassword,
+		&i.SessionToken,
+		&i.CsrfToken,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const updateUserTokensLogin = `-- name: UpdateUserTokensLogin :exec
 UPDATE users
 set session_token = ?,
@@ -91,10 +112,15 @@ const updateUserTokensLogout = `-- name: UpdateUserTokensLogout :exec
 UPDATE users
 set session_token = "",
 csrf_token = ""
-WHERE username = ?
+WHERE session_token = ? AND csrf_token = ?
 `
 
-func (q *Queries) UpdateUserTokensLogout(ctx context.Context, username string) error {
-	_, err := q.db.ExecContext(ctx, updateUserTokensLogout, username)
+type UpdateUserTokensLogoutParams struct {
+	SessionToken sql.NullString
+	CsrfToken    sql.NullString
+}
+
+func (q *Queries) UpdateUserTokensLogout(ctx context.Context, arg UpdateUserTokensLogoutParams) error {
+	_, err := q.db.ExecContext(ctx, updateUserTokensLogout, arg.SessionToken, arg.CsrfToken)
 	return err
 }

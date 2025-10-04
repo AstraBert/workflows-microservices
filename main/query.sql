@@ -20,8 +20,13 @@ WHERE username = ?;
 UPDATE users
 set session_token = "",
 csrf_token = ""
-WHERE username = ?;
+WHERE session_token = ? AND csrf_token = ?;
 
 -- name: DeleteUser :exec
 DELETE FROM users
 WHERE username = ?;
+
+-- name: GetUserBySessionToken :one
+SELECT * FROM users 
+WHERE session_token = ? 
+LIMIT 1;

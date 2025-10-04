@@ -1,0 +1,28 @@
+package templates
+
+templ SignUp() {
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Shop-A-Code - Sign Up</title>
+        <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <form hx-post="/register" hx-trigger="submit" hx-target="#successBanner">
+            <h1 class="h3 mb-3 fw-normal">Sign Up to Shop-A-Code</h1>
+            <div class="form-floating">
+                <input type="text" class="form-control" id="username" name="username" placeholder="hello-world">
+                <label for="username">Username</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                <label for="password">Password</label>
+            </div>
+            <button class="btn btn-primary w-100 py-2" type="submit" id="signInButton">Register</button>
+        </form>
+        <div id="successBanner">
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    </body>
+}

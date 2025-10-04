@@ -1,0 +1,19 @@
+package templates
+
+templ SingupBanner(err error) {
+    if err != nil {
+        <div class="container mt-4">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Error!</strong> Something went wrong: {err.Error()}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    } else {
+        <div class="container mt-4">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Success!</strong> You were successfully registered! Go to <a href="/signin">the login page</a> to access your account!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    }
+}

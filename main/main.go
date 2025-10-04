@@ -27,6 +27,7 @@ func Setup() *fiber.App {
 	app.Post("/register", handlers.RegisterUser)
 	app.Post("/login", handlers.LoginUser)
 	app.Post("/logout", handlers.LogoutUser)
-
+	app.Get("/signin", handlers.SinginRoute)
+	app.Get("/signup", handlers.SingupRoute)
 	return app
 }
