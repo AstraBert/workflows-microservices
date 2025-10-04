@@ -38,7 +38,7 @@ var ddl string
 func CreateNewDb() (*sql.DB, error) {
 	ctx := context.Background()
 
-	db, err := sql.Open("sqlite", ":memory:")
+	db, err := sql.Open("sqlite", "users.db")
 	if err != nil {
 		return nil, err
 	}
