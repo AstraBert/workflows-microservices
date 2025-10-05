@@ -1,6 +1,7 @@
 package models
 
 type Order struct {
+	UserId        int64  `json:"userId"`
 	OrderId       string `json:"orderId"`
 	FirstName     string `json:"firstName"`
 	LastName      string `json:"lastName"`

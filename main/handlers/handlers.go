@@ -173,6 +173,18 @@ func HandleOrder(c *fiber.Ctx) error {
 		banners := templates.SingupBanner(errors.New("you are not authorized to place orders"))
 		return banners.Render(c.Context(), c.Response().BodyWriter())
 	}
+	sqlDb, err := commons.CreateNewDb()
+	if err != nil {
+		banners := templates.SingupBanner(errors.New("you are not authorized to place orders"))
+		return banners.Render(c.Context(), c.Response().BodyWriter())
+	}
+	queries := db.New(sqlDb)
+	user, err := queries.GetUserBySessionToken(context.Background(), sql.NullString{String: c.Cookies("session_token"), Valid: true})
+	if err != nil {
+		banners := templates.SingupBanner(errors.New("you are not authorized to place orders"))
+		return banners.Render(c.Context(), c.Response().BodyWriter())
+	}
+	userId := user.ID
 	firstName := c.FormValue("firstName")
 	lastName := c.FormValue("lastName")
 	address := c.FormValue("address")
@@ -191,7 +203,7 @@ func HandleOrder(c *fiber.Ctx) error {
 		banners := templates.SingupBanner(err)
 		return banners.Render(c.Context(), c.Response().BodyWriter())
 	}
-	order := models.Order{FirstName: firstName, LastName: lastName, Address: address, Address2: address2, City: city, State: state, Zip: zip, Country: country, Email: email, Phone: phone, PaymentMethod: paymentMethod, Amount: amount, OrderId: orderId}
+	order := models.Order{FirstName: firstName, LastName: lastName, Address: address, Address2: address2, City: city, State: state, Zip: zip, Country: country, Email: email, Phone: phone, PaymentMethod: paymentMethod, Amount: amount, OrderId: orderId, UserId: userId}
 	byteData, err := json.Marshal(order)
 	if err != nil {
 		banners := templates.SingupBanner(err)
