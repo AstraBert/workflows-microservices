@@ -1,0 +1,148 @@
+package templates
+
+templ OrderForm(itemId int) {
+    {{
+        itemToPrice := map[int]float64{1: 50.00, 2: 100.00, 3: 25.00}
+        price, ok := itemToPrice[itemId]
+        if !ok {
+            price = 50.00
+        }
+    }}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop-A-Code - Place an Order</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 40px 0;
+        }
+        .form-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .section-title {
+            color: #495057;
+            border-bottom: 2px solid #0d6efd;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h2 class="text-center mb-4">Order & Payment Information</h2>
+            
+            <form id="orderForm" hx-post="/orders" hx-trigger="submit" hx-target="#successBanner">
+                <!-- Shipping Address Section -->
+                <div class="mb-5">
+                    <h4 class="section-title">Shipping Address</h4>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="firstName" class="form-label">First Name *</label>
+                            <input type="text" class="form-control" id="firstName" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="lastName" class="form-label">Last Name *</label>
+                            <input type="text" class="form-control" id="lastName" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Street Address *</label>
+                        <input type="text" class="form-control" id="address" placeholder="House number and street name" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="address2" class="form-label">Apartment, suite, etc. (optional)</label>
+                        <input type="text" class="form-control" id="address2">
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="city" class="form-label">City *</label>
+                            <input type="text" class="form-control" id="city" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="state" class="form-label">State/Province *</label>
+                            <input type="text" class="form-control" id="state" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="zip" class="form-label">ZIP/Postal Code *</label>
+                            <input type="text" class="form-control" id="zip" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="country" class="form-label">Country *</label>
+                        <select class="form-select" id="country" required>
+                            <option value="">Select a country</option>
+                            <option value="US">United States</option>
+                            <option value="CA">Canada</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="IT">Italy</option>
+                            <option value="DE">Germany</option>
+                            <option value="FR">France</option>
+                            <option value="ES">Spain</option>
+                            <option value="AU">Australia</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Contact Information Section -->
+                <div class="mb-5">
+                    <h4 class="section-title">Contact Information</h4>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email Address *</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label">Phone Number *</label>
+                            <input type="tel" class="form-control" id="phone" placeholder="+1 (555) 123-4567" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Details Section -->
+                <div class="mb-4">
+                    <h4 class="section-title">Payment Details</h4>
+                    <div class="mb-3">
+                        <label for="paymentMethod" class="form-label">Payment Method *</label>
+                        <select class="form-select" id="paymentMethod" required>
+                            <option value="">Select payment method</option>
+                            <option value="credit_card">Credit Card</option>
+                            <option value="debit_card">Debit Card</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="bank_transfer">Bank Transfer</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Amount *</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Monopoly Dollars</span>
+                            <input type="number" class="form-control" id="amount" value={price} disabled required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg">Place Order</button>
+                </div>
+            </form>
+        </div>
+        <div id="successBanner">
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+}

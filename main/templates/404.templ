@@ -1,0 +1,24 @@
+package templates
+
+templ Page404(message string) {
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Shop-A-Code - Unauthorized Access</title>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container">
+            <div class="row justify-content-center align-items-center min-vh-100">
+                <div class="col-md-6 text-center">
+                    <h1 class="display-1 text-danger">404</h1>
+                    <h2 class="mb-4">Ooops, this page does not exist!</h2>
+                    <p class="lead text-muted mb-4">{message}</p>
+                    <a href="/" class="btn btn-primary">Return to Home</a>
+                </div>
+            </div>
+        </div>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    </body>
+}

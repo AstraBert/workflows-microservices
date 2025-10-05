@@ -2,26 +2,90 @@ package templates
 
 templ SignUp() {
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <title>Shop-A-Code - Sign Up</title>
         <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js"></script>
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet"/>
+        <style>
+            body {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            }
+            .auth-container {
+                width: 100%;
+                max-width: 420px;
+                padding: 15px;
+            }
+            .auth-card {
+                background: white;
+                border-radius: 16px;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+                padding: 40px;
+            }
+            .form-floating {
+                margin-bottom: 16px;
+            }
+            .form-control:focus {
+                border-color: #667eea;
+                box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+            }
+            .btn-primary {
+                background: rgb(106, 106, 225);
+                border: none;
+                font-weight: 600;
+                margin-top: 8px;
+            }
+            .btn-primary:hover {
+                background: blue;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            }
+            .auth-footer {
+                text-align: center;
+                margin-top: 24px;
+                color: #6c757d;
+                font-size: 0.9rem;
+            }
+            .auth-footer a {
+                color: #667eea;
+                text-decoration: none;
+                font-weight: 600;
+            }
+            .auth-footer a:hover {
+                text-decoration: underline;
+            }
+            h1 {
+                color: #2d3748;
+                font-weight: 700;
+                margin-bottom: 32px;
+                text-align: center;
+            }
+        </style>
     </head>
     <body>
-        <form hx-post="/register" hx-trigger="submit" hx-target="#successBanner">
-            <h1 class="h3 mb-3 fw-normal">Sign Up to Shop-A-Code</h1>
-            <div class="form-floating">
-                <input type="text" class="form-control" id="username" name="username" placeholder="hello-world">
-                <label for="username">Username</label>
+        <div class="auth-container">
+            <div class="auth-card">
+                <form hx-post="/register" hx-trigger="submit" hx-target="#successBanner">
+                    <h1 class="h3">Sign Up to Shop-A-Code</h1>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="username" name="username" placeholder="hello-world" required/>
+                        <label for="username">Username</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required/>
+                        <label for="password">Password</label>
+                    </div>
+                    <button class="btn btn-primary w-100 py-2" type="submit" id="signUpButton">Register</button>
+                </form>
+                <div class="auth-footer">
+                    Already have an account? <a href="/signin">Sign in</a>
+                </div>
+                <div id="successBanner"></div>
             </div>
-            <div class="form-floating">
-                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-                <label for="password">Password</label>
-            </div>
-            <button class="btn btn-primary w-100 py-2" type="submit" id="signInButton">Register</button>
-        </form>
-        <div id="successBanner">
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     </body>

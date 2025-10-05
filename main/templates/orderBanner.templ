@@ -1,0 +1,38 @@
+package templates
+
+import "fmt"
+
+templ OrderBanner(successPayment bool, successOrder bool, successStock bool) {
+    {{
+        messages := make([]string, 3)
+        color := "alert-success"
+        if successPayment {
+            messages[1] = "Payment successfully completed!"
+        } else {
+            messages[1] = "Payment failed :("
+            color = "alert-danger"
+        }
+        if successOrder {
+            messages[0] = "Order successfully placed!"
+        } else {
+            messages[0] = "Your order was not placed correctly :("
+            color = "alert-danger"
+        }
+        if successStock {
+            messages[2] = "Stock updated successfully"
+        } else {
+            messages[2] = "Failed to update the stock :("
+            color = "alert-danger"
+        }
+    }}
+    <div class="container mt-4">
+        <div class={fmt.Sprintf("alert %s alert-dismissible fade show", color)} role="alert">
+            <ul>
+            for _, msg := range messages {
+              <li>{msg}</li>  
+            }
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+}

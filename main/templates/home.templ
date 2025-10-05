@@ -2,17 +2,31 @@ package templates
 
 templ Home() {
     <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shop-A-Code</title>
-    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .carousel-item svg image {
-            width: 300px;
-            height: 300px;
-        }
-    </style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Shop-A-Code</title>
+        <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            .carousel-item svg image {
+                width: 300px;
+                height: 300px;
+            }
+            .carousel-item {
+                position: relative;
+            }
+            .carousel-caption {
+                position: absolute;
+                bottom: 120px;
+            }
+            .buy-button-container {
+                position: absolute;
+                bottom: 40px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 60%;
+            }
+        </style>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -47,37 +61,40 @@ templ Home() {
                     <div class="carousel-item active">
                         <svg width="100%" height="600" xmlns="http://www.w3.org/2000/svg">
                             <rect width="100%" height="100%" fill="#FF6B6B"/>
-                            <image href="/mug.png" x="50%" y="50%" transform="translate(-150, -150)" width="300" height="300"/>
+                            <image href="/mug.png" x="50%" y="30%" transform="translate(-150, -150)" width="300" height="300"/>
                         </svg>
-                        <br>
-                        <br>
                         <div class="carousel-caption d-none d-md-block">
                             <h5>Coffee Mug (50 MonoPoly Dollars)</h5>
                             <p>Start your day right with our premium coffee mugs.</p>
+                        </div>
+                        <div class="buy-button-container">
+                            <a href="/orders/1"><button type="button" class="btn btn-primary w-100">Buy Now $$</button></a>
                         </div>
                     </div>
                     <div class="carousel-item">
                         <svg width="100%" height="600" xmlns="http://www.w3.org/2000/svg">
                             <rect width="100%" height="100%" fill="#4ECDC4"/>
-                            <image href="/tshirt.png" x="50%" y="50%" transform="translate(-150, -150)" width="300" height="300"/>
+                            <image href="/tshirt.png" x="50%" y="30%" transform="translate(-150, -150)" width="300" height="300"/>
                         </svg>
-                        <br>
-                        <br>
                         <div class="carousel-caption d-none d-md-block">
                             <h5>Premium T-Shirt (100 MonoPoly Dollars)</h5>
                             <p>Comfortable and stylish t-shirts for every occasion.</p>
+                        </div>
+                        <div class="buy-button-container">
+                            <a href="/orders/2"><button type="button" class="btn btn-primary w-100">Buy Now $$</button></a>
                         </div>
                     </div>
                     <div class="carousel-item">
                         <svg width="100%" height="600" xmlns="http://www.w3.org/2000/svg">
                             <rect width="100%" height="100%" fill="#45B7D1"/>
-                            <image href="/socks.png" x="50%" y="50%" transform="translate(-150, -150)" width="300" height="300"/>
+                            <image href="/socks.png" x="50%" y="30%" transform="translate(-150, -150)" width="300" height="300"/>
                         </svg>
-                        <br>
-                        <br>
                         <div class="carousel-caption d-none d-md-block">
                             <h5>Cozy Socks (25 MonoPoly Dollars)</h5>
                             <p>Keep your feet warm and comfortable all day long.</p>
+                        </div>
+                        <div class="buy-button-container">
+                            <a href="/orders/3"><button type="button" class="btn btn-primary w-100">Buy Now $$</button></a>
                         </div>
                     </div>
                 </div>
@@ -89,9 +106,6 @@ templ Home() {
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
-            </div>
-            <div class="mt-5 d-flex justify-content-center align-items-center">
-                <button type="button" class="btn btn-primary" style="width: 60%;">Buy Now $$$</button>
             </div>
         </div>
 
