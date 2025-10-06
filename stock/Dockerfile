@@ -6,4 +6,5 @@ COPY ./ /stock/
 
 RUN uv sync
 
-ENTRYPOINT [ "uvx", "--from", ".", "process-stock" ]
+ENV PYTHONUNBUFFERED=1
+ENTRYPOINT ["/bin/sh", "-c", "source .venv/bin/activate && process-stock"]

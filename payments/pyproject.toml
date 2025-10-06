@@ -9,7 +9,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "aiosqlite>=0.21.0",
+    "asyncpg>=0.30.0",
     "kafka-python>=2.2.15",
     "llama-index-workflows>=2.6.0",
     "pydantic>=2.11.10",

@@ -6,4 +6,5 @@ COPY ./ /payments/
 
 RUN uv sync
 
-ENTRYPOINT [ "uvx", "--from", ".", "process-payments" ]
+ENV PYTHONUNBUFFERED=1
+ENTRYPOINT ["/bin/sh", "-c", "source .venv/bin/activate && process-payments"]

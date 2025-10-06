@@ -1,8 +1,8 @@
-import time
 import json
 import asyncio
 
 from typing import Annotated
+from datetime import datetime
 from orders.db import CreateOrderParams, Order, AsyncQuerier
 from .events import InputEvent, OutputEvent, OrderEvent
 from .resources import get_querier
@@ -15,22 +15,22 @@ class OrderWorkflow(Workflow):
     async def extract_order(self, ev: InputEvent) -> OrderEvent:
         user_name = ev.data.get("firstName", "") + " " + ev.data.get("lastName", "")
         address = ev.data.get("address", "") + " " + ev.data.get("address2") + ", " + ev.data.get("city", "") + " (" + ev.data.get("zip", "") + "), " + ev.data.get("state", "") + ", " + ev.data.get("country", "")
-        ordr = Order(order_id=ev.data.get("orderId", ""), user_id=ev.data.get("userId", ""), user_name=user_name, shipping_address=address, order_time=time.time(), status="processing", email=ev.data.get("email", ""), phone=ev.data.get("phone", ""))
+        ordr = Order(order_id=ev.data.get("orderId", ""), user_id=str(ev.data.get("userId", "")), user_name=user_name, shipping_address=address, order_time=datetime.now(), status="processing", email=ev.data.get("email", ""), phone=ev.data.get("phone", ""))
         print(f"Extracted order:\n{ordr.model_dump_json(indent=4)}")
         return OrderEvent(order=ordr)
     @step
     async def process_order(self, ev: OrderEvent, querier: Annotated[AsyncQuerier, Resource(get_querier)]) -> OutputEvent:
         try:
-            params = CreateOrderParams(user_id=ev.order.user_id, user_name=ev.order.user_name, email=ev.order.email, phone=ev.order.phone, shipping_address=ev.order.shipping_address, status=ev.order.status)
+            params = CreateOrderParams(user_id=str(ev.order.user_id), user_name=ev.order.user_name, email=ev.order.email, phone=ev.order.phone, shipping_address=ev.order.shipping_address, status=ev.order.status, order_id=ev.order.order_id)
             res = await querier.create_order(params)
             if res is None:
-                print("Order creation failed")
+                print("Order creation failed because of: no rows returned")
                 return OutputEvent(success=False, orderId=ev.order.order_id)
             else:
                 print("Successfully created the order")
                 return OutputEvent(success=True, orderId=ev.order.order_id)
-        except Exception:
-            print("Order creation failed")
+        except Exception as e:
+            print(f"Order creation failed because of: {e}")
             return OutputEvent(success=False, orderId=ev.order.order_id)
 
 async def run_workflow():

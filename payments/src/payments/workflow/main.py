@@ -1,8 +1,9 @@
-import time
 import json
 import asyncio
+import decimal
 
 from typing import Annotated
+from datetime import datetime
 from payments.db import Payment, AsyncQuerier
 from .events import InputEvent, OutputEvent, PaymentEvent
 from .resources import get_querier
@@ -13,7 +14,7 @@ from kafka import KafkaConsumer, KafkaProducer
 class PaymentWorkflow(Workflow):
     @step
     async def extract_payment(self, ev: InputEvent, ctx: Context) -> PaymentEvent:
-        pay = Payment(payment_id=0, payment_time=time.time(), status="completed", method=ev.data.get("paymentMethod", ""), amount=float(ev.data.get("amount", "25.00")), user_id=ev.data.get("userId", ""))
+        pay = Payment(payment_id=0, payment_time=datetime.now(), status="completed", method=ev.data.get("paymentMethod", ""), amount=decimal.Decimal(ev.data.get("amount", "25")), user_id=str(ev.data.get("userId", "")))
         print(f"Extracted payment:\n{pay.model_dump_json(indent=4)}")
         async with ctx.store.edit_state() as state:
             state.order_id = ev.data.get("orderId", "")

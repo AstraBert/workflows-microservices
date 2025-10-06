@@ -6,4 +6,5 @@ COPY ./ /orders/
 
 RUN uv sync
 
-ENTRYPOINT [ "uvx", "--from", ".", "process-orders" ]
+ENV PYTHONUNBUFFERED=1
+ENTRYPOINT ["/bin/sh", "-c", "source .venv/bin/activate && process-orders"]

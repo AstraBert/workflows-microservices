@@ -2,7 +2,8 @@
 # versions:
 #   sqlc v1.30.0
 # source: query.sql
-from typing import Any, Optional
+import decimal
+from typing import Optional
 
 import sqlalchemy
 import sqlalchemy.ext.asyncio
@@ -14,7 +15,7 @@ CREATE_PAYMENT = """-- name: create_payment \\:one
 INSERT INTO payments (
   user_id, status, method, amount
 ) VALUES (
-  ?, ?, ?, ?
+  :p1, :p2, :p3, :p4
 )
 RETURNING payment_id, user_id, payment_time, status, method, amount
 """
@@ -24,7 +25,7 @@ class AsyncQuerier:
     def __init__(self, conn: sqlalchemy.ext.asyncio.AsyncConnection):
         self._conn = conn
 
-    async def create_payment(self, *, user_id: Any, status: Any, method: Any, amount: Optional[Any]) -> Optional[models.Payment]:
+    async def create_payment(self, *, user_id: str, status: str, method: str, amount: Optional[decimal.Decimal]) -> Optional[models.Payment]:
         row = (await self._conn.execute(sqlalchemy.text(CREATE_PAYMENT), {
             "p1": user_id,
             "p2": status,

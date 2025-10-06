@@ -7,7 +7,7 @@ plugins:
 sql:
   - schema: "schema.sql"
     queries: "query.sql"
-    engine: "sqlite"
+    engine: "postgresql"
     codegen:
       - out: src/orders/db
         plugin: py

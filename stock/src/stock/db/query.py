@@ -2,7 +2,7 @@
 # versions:
 #   sqlc v1.30.0
 # source: query.sql
-from typing import Any, Optional
+from typing import Optional
 
 import sqlalchemy
 import sqlalchemy.ext.asyncio
@@ -12,22 +12,22 @@ from stock.db import models
 
 GET_STOCK_ITEM = """-- name: get_stock_item \\:one
 SELECT id, item, available_number, updated_at FROM stock
-WHERE item = ? LIMIT 1
+WHERE item = :p1 LIMIT 1
 """
 
 
 INSERT_SEED_DATA = """-- name: insert_seed_data \\:exec
-INSERT OR IGNORE INTO stock (item, available_number) VALUES
-    ('T-Shirt', 100),
-    ('Socks', 100),
+INSERT INTO stock (item, available_number) 
+VALUES     
+    ('T-Shirt', 100),     
+    ('Socks', 100),     
     ('Mug', 100)
+ON CONFLICT DO NOTHING
 """
 
 
 UPDATE_STOCK_ITEM = """-- name: update_stock_item \\:exec
-UPDATE stock
-set available_number = ?
-WHERE item = ?
+UPDATE stock set available_number = :p1 WHERE item = :p2
 """
 
 
@@ -35,7 +35,7 @@ class AsyncQuerier:
     def __init__(self, conn: sqlalchemy.ext.asyncio.AsyncConnection):
         self._conn = conn
 
-    async def get_stock_item(self, *, item: Any) -> Optional[models.Stock]:
+    async def get_stock_item(self, *, item: str) -> Optional[models.Stock]:
         row = (await self._conn.execute(sqlalchemy.text(GET_STOCK_ITEM), {"p1": item})).first()
         if row is None:
             return None
@@ -49,5 +49,5 @@ class AsyncQuerier:
     async def insert_seed_data(self) -> None:
         await self._conn.execute(sqlalchemy.text(INSERT_SEED_DATA))
 
-    async def update_stock_item(self, *, available_number: Any, item: Any) -> None:
+    async def update_stock_item(self, *, available_number: int, item: str) -> None:
         await self._conn.execute(sqlalchemy.text(UPDATE_STOCK_ITEM), {"p1": available_number, "p2": item})

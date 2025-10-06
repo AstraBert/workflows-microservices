@@ -3,7 +3,7 @@
 #   sqlc v1.30.0
 # source: query.sql
 import pydantic
-from typing import Any, Optional
+from typing import Optional
 
 import sqlalchemy
 import sqlalchemy.ext.asyncio
@@ -13,21 +13,22 @@ from orders.db import models
 
 CREATE_ORDER = """-- name: create_order \\:one
 INSERT INTO orders (
-  user_id, user_name, email, phone, shipping_address, status
+  user_id, user_name, email, phone, shipping_address, status, order_id
 ) VALUES (
-  ?, ?, ?, ?, ?, ?
+  :p1, :p2, :p3, :p4, :p5, :p6, :p7
 )
 RETURNING order_id, user_id, user_name, email, phone, order_time, status, shipping_address
 """
 
 
 class CreateOrderParams(pydantic.BaseModel):
-    user_id: Any
-    user_name: Any
-    email: Any
-    phone: Any
-    shipping_address: Any
-    status: Any
+    user_id: str
+    user_name: str
+    email: str
+    phone: str
+    shipping_address: str
+    status: str
+    order_id: str
 
 
 class AsyncQuerier:
@@ -42,6 +43,7 @@ class AsyncQuerier:
             "p4": arg.phone,
             "p5": arg.shipping_address,
             "p6": arg.status,
+            "p7": arg.order_id,
         })).first()
         if row is None:
             return None

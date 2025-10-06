@@ -1,21 +1,22 @@
+import os
 from stock.db import AsyncQuerier
 
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy import text
 
-DATABASE_URL = "sqlite+aiosqlite:///./stock.db"
+DATABASE_URL=f"postgresql+asyncpg://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@postgres:5432/{os.getenv('POSTGRES_DB')}"
 
 QUERY = """
 CREATE TABLE IF NOT EXISTS stock (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMARY KEY,
     item TEXT NOT NULL UNIQUE,
     available_number INTEGER NOT NULL DEFAULT 0 CHECK(available_number >= 0),
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 """
 
 engine = create_async_engine(
-    DATABASE_URL
+    DATABASE_URL,
 )
 
 async def get_querier(*args, **kwargs) -> AsyncQuerier:
