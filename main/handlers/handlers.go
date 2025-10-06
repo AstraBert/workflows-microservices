@@ -209,7 +209,7 @@ func HandleOrder(c *fiber.Ctx) error {
 		banners := templates.SingupBanner(err)
 		return banners.Render(c.Context(), c.Response().BodyWriter())
 	}
-	conn, err := kafka.DialLeader(context.Background(), "tcp", "localhost:9092", "orders", 0)
+	conn, err := kafka.DialLeader(context.Background(), "tcp", "kafka:9092", "orders", 0)
 	if err != nil {
 		banners := templates.SingupBanner(err)
 		return banners.Render(c.Context(), c.Response().BodyWriter())
@@ -226,7 +226,7 @@ func HandleOrder(c *fiber.Ctx) error {
 		banners := templates.SingupBanner(err)
 		return banners.Render(c.Context(), c.Response().BodyWriter())
 	}
-	connStatus, err := kafka.DialLeader(context.Background(), "tcp", "localhost:9092", "order-status", 0)
+	connStatus, err := kafka.DialLeader(context.Background(), "tcp", "kafka:9092", "order-status", 0)
 	if err != nil {
 		banners := templates.SingupBanner(err)
 		return banners.Render(c.Context(), c.Response().BodyWriter())

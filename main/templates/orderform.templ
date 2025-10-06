@@ -1,11 +1,13 @@
 package templates
 
+import "fmt"
+
 templ OrderForm(itemId int) {
     {{
-        itemToPrice := map[int]float64{1: 50.00, 2: 100.00, 3: 25.00}
+        itemToPrice := map[int]int{1: 50, 2: 100, 3: 25}
         price, ok := itemToPrice[itemId]
         if !ok {
-            price = 50.00
+            price = 50
         }
     }}
 <head>
@@ -47,42 +49,42 @@ templ OrderForm(itemId int) {
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="firstName" class="form-label">First Name *</label>
-                            <input type="text" class="form-control" id="firstName" required>
+                            <input type="text" class="form-control" id="firstName" name="firstName" required>
                         </div>
                         <div class="col-md-6">
                             <label for="lastName" class="form-label">Last Name *</label>
-                            <input type="text" class="form-control" id="lastName" required>
+                            <input type="text" class="form-control" id="lastName" name="lastName" required>
                         </div>
                     </div>
                     
                     <div class="mb-3">
                         <label for="address" class="form-label">Street Address *</label>
-                        <input type="text" class="form-control" id="address" placeholder="House number and street name" required>
+                        <input type="text" class="form-control" id="address" name="address" placeholder="House number and street name" required>
                     </div>
                     
                     <div class="mb-3">
                         <label for="address2" class="form-label">Apartment, suite, etc. (optional)</label>
-                        <input type="text" class="form-control" id="address2">
+                        <input type="text" class="form-control" id="address2" name="address2">
                     </div>
                     
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="city" class="form-label">City *</label>
-                            <input type="text" class="form-control" id="city" required>
+                            <input type="text" class="form-control" id="city" name="city" required>
                         </div>
                         <div class="col-md-3">
                             <label for="state" class="form-label">State/Province *</label>
-                            <input type="text" class="form-control" id="state" required>
+                            <input type="text" class="form-control" id="state" name="state" required>
                         </div>
                         <div class="col-md-3">
                             <label for="zip" class="form-label">ZIP/Postal Code *</label>
-                            <input type="text" class="form-control" id="zip" required>
+                            <input type="text" class="form-control" id="zip" name="zip" required>
                         </div>
                     </div>
                     
                     <div class="mb-3">
                         <label for="country" class="form-label">Country *</label>
-                        <select class="form-select" id="country" required>
+                        <select class="form-select" id="country" name="country" required>
                             <option value="">Select a country</option>
                             <option value="US">United States</option>
                             <option value="CA">Canada</option>
@@ -102,11 +104,11 @@ templ OrderForm(itemId int) {
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="email" class="form-label">Email Address *</label>
-                            <input type="email" class="form-control" id="email" required>
+                            <input type="email" class="form-control" id="email" name="email" required>
                         </div>
                         <div class="col-md-6">
                             <label for="phone" class="form-label">Phone Number *</label>
-                            <input type="tel" class="form-control" id="phone" placeholder="+1 (555) 123-4567" required>
+                            <input type="tel" class="form-control" id="phone" name="phone" placeholder="+1 (555) 123-4567" required>
                         </div>
                     </div>
                 </div>
@@ -116,7 +118,7 @@ templ OrderForm(itemId int) {
                     <h4 class="section-title">Payment Details</h4>
                     <div class="mb-3">
                         <label for="paymentMethod" class="form-label">Payment Method *</label>
-                        <select class="form-select" id="paymentMethod" required>
+                        <select class="form-select" id="paymentMethod" name="paymentMethod" required>
                             <option value="">Select payment method</option>
                             <option value="credit_card">Credit Card</option>
                             <option value="debit_card">Debit Card</option>
@@ -129,7 +131,7 @@ templ OrderForm(itemId int) {
                         <label for="amount" class="form-label">Amount *</label>
                         <div class="input-group">
                             <span class="input-group-text">Monopoly Dollars</span>
-                            <input type="number" class="form-control" id="amount" value={price} disabled required>
+                            <input type="text" class="form-control" id="amount" name="amount" value={fmt.Sprintf("%d", price)} disabled required>
                         </div>
                     </div>
                 </div>
