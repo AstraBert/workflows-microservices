@@ -12,7 +12,7 @@ sql:
       - out: src/stock/db
         plugin: py
         options:
-          package: stock
+          package: stock.db
           emit_sync_querier: false
           emit_async_querier: true
           emit_pydantic_models: true

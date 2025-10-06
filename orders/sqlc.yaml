@@ -12,7 +12,7 @@ sql:
       - out: src/orders/db
         plugin: py
         options:
-          package: orders
+          package: orders.db
           emit_sync_querier: false
           emit_async_querier: true
           emit_pydantic_models: true

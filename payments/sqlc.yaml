@@ -12,7 +12,7 @@ sql:
       - out: src/payments/db
         plugin: py
         options:
-          package: payments
+          package: payments.db
           emit_sync_querier: false
           emit_async_querier: true
           emit_pydantic_models: true

@@ -1,4 +1,4 @@
-from orders.db import Order
+from payments.db import Payment
 
 from pydantic import ConfigDict
 from workflows.events import Event, StartEvent, StopEvent
@@ -7,11 +7,11 @@ from typing import Any, Literal
 class InputEvent(StartEvent):
     data: dict[str, Any]
 
-class OrderEvent(Event):
-    order: Order
+class PaymentEvent(Event):
+    payment: Payment
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
 class OutputEvent(StopEvent):
-    type: Literal["order"] = "order"
+    type: Literal["payment"] = "payment"
     success: bool
     orderId: str

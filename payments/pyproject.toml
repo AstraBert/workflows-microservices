@@ -1,3 +1,7 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "payments"
 version = "0.1.0"
@@ -11,3 +15,12 @@ dependencies = [
     "pydantic>=2.11.10",
     "sqlalchemy>=2.0.43",
 ]
+
+[tool.hatch.build.targets.wheel]
+only-include = ["src/payments"]
+
+[tool.hatch.build.targets.wheel.sources]
+"src" = ""
+
+[project.scripts]
+process-payments = "payments.workflow.main:main"
