@@ -153,13 +153,13 @@ templ OrderForm(itemId int) {
                 <div class="d-grid gap-2">
                     <button type="submit" class="btn btn-primary btn-lg" hx-indicator="#loadingIndicator">Place Order</button>
                 </div>
-            </form>
-            <div id="loadingIndicator" class="htmx-indicator text-center mt-4">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Processing...</span>
+                <div id="loadingIndicator" class="htmx-indicator text-center mt-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Processing...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Processing your order...</p>
                 </div>
-                <p class="mt-2 text-muted">Processing your order...</p>
-            </div>
+            </form>
         </div>
         <div id="successBanner">
         </div>

@@ -50,7 +50,7 @@ func OrderForm(itemId int) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" readonly required></div></div></div><!-- Submit Button --><div class=\"d-grid gap-2\"><button type=\"submit\" class=\"btn btn-primary btn-lg\" hx-indicator=\"#loadingIndicator\">Place Order</button></div></form><div id=\"loadingIndicator\" class=\"htmx-indicator text-center mt-4\"><div class=\"spinner-border text-primary\" role=\"status\"><span class=\"visually-hidden\">Processing...</span></div><p class=\"mt-2 text-muted\">Processing your order...</p></div></div><div id=\"successBanner\"></div></div><script src=\"https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js\"></script></body>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" readonly required></div></div></div><!-- Submit Button --><div class=\"d-grid gap-2\"><button type=\"submit\" class=\"btn btn-primary btn-lg\" hx-indicator=\"#loadingIndicator\">Place Order</button></div><div id=\"loadingIndicator\" class=\"htmx-indicator text-center mt-4\"><div class=\"spinner-border text-primary\" role=\"status\"><span class=\"visually-hidden\">Processing...</span></div><p class=\"mt-2 text-muted\">Processing your order...</p></div></form></div><div id=\"successBanner\"></div></div><script src=\"https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js\"></script></body>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
