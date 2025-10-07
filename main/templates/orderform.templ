@@ -35,6 +35,19 @@ templ OrderForm(itemId int) {
             padding-bottom: 10px;
             margin-bottom: 25px;
         }
+
+        .htmx-indicator {
+            display: none;
+        }
+
+        .htmx-request .htmx-indicator {
+            display: block;
+        }
+
+        .htmx-request #orderForm {
+            opacity: 0.6;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -138,9 +151,15 @@ templ OrderForm(itemId int) {
 
                 <!-- Submit Button -->
                 <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary btn-lg">Place Order</button>
+                    <button type="submit" class="btn btn-primary btn-lg" hx-indicator="#loadingIndicator">Place Order</button>
                 </div>
             </form>
+            <div id="loadingIndicator" class="htmx-indicator text-center mt-4">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Processing...</span>
+                </div>
+                <p class="mt-2 text-muted">Processing your order...</p>
+            </div>
         </div>
         <div id="successBanner">
         </div>

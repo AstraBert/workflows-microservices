@@ -40,6 +40,8 @@ services:
     build: ./main/
     ports:
       - "8000:8000"
+    volumes:
+      - ./main/users.db:/app/users.db
   
   payments:
     build: ./payments/

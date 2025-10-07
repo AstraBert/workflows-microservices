@@ -9,8 +9,9 @@ import (
 	"ecommerce/templates"
 	"encoding/json"
 	"errors"
-	"log"
+	"fmt"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -226,59 +227,80 @@ func HandleOrder(c *fiber.Ctx) error {
 		banners := templates.SingupBanner(err)
 		return banners.Render(c.Context(), c.Response().BodyWriter())
 	}
-	connStatus, err := kafka.DialLeader(context.Background(), "tcp", "kafka:9092", "order-status", 0)
-	if err != nil {
-		banners := templates.SingupBanner(err)
-		return banners.Render(c.Context(), c.Response().BodyWriter())
+	partitions := []int{0, 1, 2}
+	var wg sync.WaitGroup
+	statusChannel := make(chan *models.OrdersReportStatus, 3)
+
+	for _, part := range partitions {
+		wg.Add(1)
+		go readKafkaPartition(part, statusChannel, &wg)
 	}
-	connStatus.SetReadDeadline(time.Now().Add(10 * time.Minute))
-	batch := connStatus.ReadBatch(1e3, 1e6) // fetch 1KB min, 1MB max
 
-	toMonitor := make([]models.OrdersReportStatus, 0, 3) // Changed to hold parsed structs
-	b := make([]byte, 1e3)                               // 1KB max per message
+	go func() {
+		wg.Wait()
+		close(statusChannel)
+	}()
 
-	for {
-		n, err := batch.Read(b)
-		if err != nil {
-			break
-		}
+	successOrder := false
+	successPayment := false
+	successStock := false
 
-		// Parse the JSON message
-		var status models.OrdersReportStatus
-		if err := json.Unmarshal(b[:n], &status); err != nil {
-			// Log the error or handle it appropriately
-			log.Printf("Error unmarshaling message: %v", err)
+	for result := range statusChannel {
+		if result == nil {
 			continue
 		}
-
-		toMonitor = append(toMonitor, status)
-		if len(toMonitor) == 3 {
-			break
-		}
-	}
-
-	if err := batch.Close(); err != nil {
-		banners := templates.SingupBanner(err)
-		return banners.Render(c.Context(), c.Response().BodyWriter())
-	}
-
-	if err := connStatus.Close(); err != nil {
-		banners := templates.SingupBanner(err)
-		return banners.Render(c.Context(), c.Response().BodyWriter())
-	}
-	successPayment := false
-	successOrder := false
-	successStock := false
-	for _, item := range toMonitor {
-		switch item.Type {
-		case "payment":
-			successPayment = item.Success
+		switch result.Type {
 		case "order":
-			successOrder = item.Success
+			successOrder = result.Success
+		case "payment":
+			successPayment = result.Success
 		case "stock":
-			successStock = item.Success
+			successStock = result.Success
 		}
 	}
+
 	orderBanner := templates.OrderBanner(successPayment, successOrder, successStock)
 	return orderBanner.Render(c.Context(), c.Response().BodyWriter())
+}
+
+func readKafkaPartition(partition int, ch chan<- *models.OrdersReportStatus, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	connStatus, err := kafka.DialLeader(context.Background(), "tcp", "kafka:9092", "order-status", partition)
+	if err != nil {
+		fmt.Printf("Partition %d failed to connect because of: %s\n", partition, err.Error())
+		ch <- nil
+		return
+	}
+	defer connStatus.Close()
+
+	_, err = connStatus.ReadLastOffset()
+	if err != nil {
+		fmt.Printf("Partition %d failed to read the last offset because of: %s\n", partition, err.Error())
+		ch <- nil
+		return
+	}
+	connStatus.SetReadDeadline(time.Now().Add(30 * time.Second))
+	batch := connStatus.ReadBatch(1e3, 1e6) // fetch 1KB min, 1MB max
+	defer batch.Close()
+
+	b := make([]byte, 1e3) // 1KB max per message
+
+	n, err := batch.Read(b)
+	if err != nil {
+		fmt.Printf("Partition %d failed to receive message because of: %s\n", partition, err.Error())
+		ch <- nil
+		return
+	}
+
+	// Parse the JSON message
+	var status models.OrdersReportStatus
+	if err := json.Unmarshal(b[:n], &status); err != nil {
+		fmt.Printf("Partition %d failed to unmarshal message because of: %s\n", partition, err.Error())
+		ch <- nil
+		return
+	}
+
+	fmt.Printf("Partition %d received message: %v\n", partition, status)
+	ch <- &status
 }
