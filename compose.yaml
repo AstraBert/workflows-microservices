@@ -42,6 +42,8 @@ services:
       - "8000:8000"
     volumes:
       - ./main/users.db:/app/users.db
+    depends_on:
+      - kafka
   
   payments:
     build: ./payments/
@@ -49,6 +51,9 @@ services:
       POSTGRES_DB: $POSTGRES_DB
       POSTGRES_USER: $POSTGRES_USER
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    depends_on:
+      - kafka
+      - postgres
   
   orders:
     build: ./orders/
@@ -56,6 +61,9 @@ services:
       POSTGRES_DB: $POSTGRES_DB
       POSTGRES_USER: $POSTGRES_USER
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    depends_on:
+      - kafka
+      - postgres
 
   stock:
     build: ./stock/
@@ -63,9 +71,12 @@ services:
       POSTGRES_DB: $POSTGRES_DB
       POSTGRES_USER: $POSTGRES_USER
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    depends_on:
+      - kafka
+      - postgres
 
   postgres:
-    image: postgres
+    image: postgres:16
     ports:
       - 5432:5432
     environment:
